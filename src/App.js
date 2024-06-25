@@ -1,7 +1,16 @@
-import React from 'react';
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Users from "./users/pages/users";
 
 function App() {
-  return <h1>Let's start!</h1>;
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Users />,
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;
