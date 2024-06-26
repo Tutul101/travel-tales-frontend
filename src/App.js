@@ -1,12 +1,19 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Root from "./Root";
 import Users from "./users/pages/users";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Users />,
+      element: <Root />,
+      children: [
+        {
+          index: true,
+          element: <Users />,
+        },
+      ],
     },
   ]);
 
