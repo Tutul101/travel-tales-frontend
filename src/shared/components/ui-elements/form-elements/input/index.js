@@ -1,28 +1,49 @@
 import React, { useState } from "react";
+import { validate } from "../../../../utils/validators";
 
 import "./input.css";
 
-const Input = ({ label, id, type, errorText, ...props }) => {
+const Input = ({ validators, label, id, type, errorText, ...props }) => {
   const [enteredValue, setEnteredValue] = useState("");
   const [isValid, setIsValid] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
 
   const changeHandler = (e) => {
-    setEnteredValue(enteredValue);
-    if (enteredValue !== "") {
-      setIsValid(true);
-    }
+    setEnteredValue(e.target.value);
+    setIsValid(validate(e.target.value, validators));
+    console.log("validate result", validate(e.target.value, validators));
   };
+
+  const touchHandler = () => {
+    setIsTouched(true);
+  };
+
   const element =
     type === "input" ? (
-      <input id={id} {...props} onChange={changeHandler} />
+      <input
+        id={id}
+        {...props}
+        onChange={changeHandler}
+        onBlur={touchHandler}
+        value={enteredValue}
+      />
     ) : (
-      <textarea id={id} {...props} onChange={changeHandler} />
+      <textarea
+        id={id}
+        {...props}
+        onChange={changeHandler}
+        onBlur={touchHandler}
+        value={enteredValue}
+      />
     );
   return (
-    <div className={`form-control ${!isValid && `form-control--invalid`}`}>
+    <div
+      className={`form-control ${
+        !isValid && isTouched && `form-control--invalid`
+      }`}>
       <label htmlFor={id}>{label}</label>
       {element}
-      {!isValid && <p>{errorText}</p>}
+      {!isValid && isTouched && <p>{errorText}</p>}
     </div>
   );
 };
