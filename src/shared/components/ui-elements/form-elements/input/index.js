@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { validate } from "../../../../utils/validators";
 
 import "./input.css";
 
-const Input = ({ validators, label, id, type, errorText, ...props }) => {
+const Input = ({
+  validators,
+  onInput,
+  setData,
+  label,
+  id,
+  type,
+  errorText,
+  ...props
+}) => {
   const [enteredValue, setEnteredValue] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
 
+  useEffect(() => {
+    onInput(isValid);
+  }, [onInput, enteredValue, isValid]);
+
   const changeHandler = (e) => {
     setEnteredValue(e.target.value);
     setIsValid(validate(e.target.value, validators));
-    console.log("validate result", validate(e.target.value, validators));
+    setData(e.target.value);
   };
 
   const touchHandler = () => {
