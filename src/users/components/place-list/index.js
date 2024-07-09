@@ -3,6 +3,7 @@ import React from "react";
 import PlaceItem from "../place-item";
 import Card from "../../../shared/components/ui-elements/card";
 import "./place-list.css";
+import Button from "../../../shared/components/ui-elements/form-elements/button";
 
 const PlaceList = ({ items }) => {
   if (items.length === 0) {
@@ -10,7 +11,7 @@ const PlaceList = ({ items }) => {
       <div className="place-list center">
         <Card>
           <h2>No places found. Maybe create one?</h2>
-          <button>Share Place</button>
+          <Button to="/places/new">Share Place</Button>
         </Card>
       </div>
     );
