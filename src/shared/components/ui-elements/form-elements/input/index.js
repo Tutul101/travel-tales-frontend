@@ -8,12 +8,13 @@ const Input = ({
   onInput,
   setData,
   label,
+  value = "",
   id,
   type,
   errorText,
   ...props
 }) => {
-  const [enteredValue, setEnteredValue] = useState("");
+  const [enteredValue, setEnteredValue] = useState(value);
   const [isValid, setIsValid] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
 
@@ -21,6 +22,12 @@ const Input = ({
     onInput(isValid);
   }, [onInput, enteredValue, isValid]);
 
+  useEffect(() => {
+    if (value !== "") {
+      setIsValid(value, validators);
+      setData(value);
+    }
+  }, [value]);
   const changeHandler = (e) => {
     setEnteredValue(e.target.value);
     setIsValid(validate(e.target.value, validators));
