@@ -8,10 +8,24 @@ import Modal from "../../../shared/components/ui-elements/modal";
 
 const PlaceItem = ({ image, title, address, description, id }) => {
   const [showMap, setShowMap] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
 
   const openMapHandler = () => setShowMap(true);
 
   const closeMapHandler = () => setShowMap(false);
+
+  const showDeleteWarningHHandler = () => {
+    setConfirmModal(true);
+  };
+
+  const cancelDelteWarningHandler = () => {
+    setConfirmModal(false);
+  };
+
+  const confirmDeleteHandler = () => {
+    console.log("Deleting.....");
+    setConfirmModal(false);
+  };
 
   return (
     <>
@@ -26,7 +40,16 @@ const PlaceItem = ({ image, title, address, description, id }) => {
           <h2>THE MAP</h2>
         </div>
       </Modal>
-
+      <Modal
+        show={confirmModal}
+        header="Are you sure?"
+        footerClass="place-item__modal-actions"
+        footer={
+          <>
+            <Button onClick={cancelDelteWarningHandler}>Cancel</Button>
+            <Button onClick={confirmDeleteHandler}>Delete</Button>
+          </>
+        }></Modal>
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
@@ -42,7 +65,9 @@ const PlaceItem = ({ image, title, address, description, id }) => {
               View On Map
             </Button>
             <Button to={`/places/${id}`}>Edit</Button>
-            <Button danger>Delete</Button>
+            <Button danger onClick={showDeleteWarningHHandler}>
+              Delete
+            </Button>
           </div>
         </Card>
       </li>
