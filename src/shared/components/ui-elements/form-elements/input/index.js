@@ -39,9 +39,10 @@ const Input = ({
   };
 
   const element =
-    type === "input" ? (
+    type === "input" || "password" ? (
       <input
         id={id}
+        type={type}
         {...props}
         onChange={changeHandler}
         onBlur={touchHandler}
@@ -50,6 +51,7 @@ const Input = ({
     ) : (
       <textarea
         id={id}
+        type={type}
         {...props}
         onChange={changeHandler}
         onBlur={touchHandler}

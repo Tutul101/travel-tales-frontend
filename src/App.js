@@ -5,6 +5,7 @@ import Users from "./users/pages/users";
 import UserPlaces from "./users/pages/user-places";
 import NewPlace from "./places/pages/new-place";
 import UpdatePlace from "./places/pages/update-place";
+import Auth from "./users/pages/auth";
 
 function App() {
   const router = createBrowserRouter([
@@ -27,6 +28,10 @@ function App() {
         {
           path: "/places/:placeId",
           element: <UpdatePlace />,
+        },
+        {
+          path: "/auth",
+          element: <Auth />,
         },
       ],
     },
