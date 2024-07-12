@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import Card from "../../../shared/components/ui-elements/card";
 import Input from "../../../shared/components/ui-elements/form-elements/input";
-
+import { AuthContext } from "../../../contexts/auth-context";
 import "./auth.css";
 import {
   VALIDATOR_EMAIL,
@@ -20,6 +20,8 @@ const Auth = () => {
   const [emailData, setEmalData] = useState("");
   const [passwordData, setPasswordData] = useState("");
   const [nameData, setNameData] = useState("");
+
+  const { login } = useContext(AuthContext);
 
   useEffect(() => {
     if (isLoginMode) {
@@ -41,6 +43,7 @@ const Auth = () => {
     e.preventDefault();
     console.log("Email Data", emailData);
     console.log("Password Data", passwordData);
+    login();
   };
 
   const switchModeHandler = () => {
