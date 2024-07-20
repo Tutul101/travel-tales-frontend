@@ -49,11 +49,29 @@ const Auth = () => {
     e.preventDefault();
     console.log("Email Data", emailData);
     console.log("Password Data", passwordData);
-
+    setIsloading(true);
     if (isLoginMode) {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/users/login",
+          {
+            email: emailData,
+            password: passwordData,
+          },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        console.log("login response", response);
+        const responseData = await response.data;
+        setIsloading(false);
+        login();
+      } catch (err) {
+        console.log("Error while login", err);
+        setError(err.message || "Someting went wrong please try again");
+      }
     } else {
       try {
-        setIsloading(true);
         const response = await axios.post(
           "http://localhost:5000/api/users/signup",
           {
