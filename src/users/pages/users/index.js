@@ -1,19 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import UsersList from "../../components/users-list";
+import axios from "axios";
+import LoadingSpinner from "../../../shared/components/ui-elements/loading-spinner";
+import ErrorModal from "../../../shared/components/ui-elements/error-modal";
 const Users = () => {
-  const USERS = [
-    {
-      id: "u1",
-      name: "Sayantan Chakravarty",
-      image:
-        "https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      places: 3,
-    },
-  ];
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/users/");
+        const responseData = await response.data.users;
+        console.log("responseData", responseData);
+        setUsers(responseData);
+      } catch (err) {
+        setError(err.message || "Something went wrong please try again");
+      }
+    };
+    getUsers();
+  }, []);
+
+  const errorHandler = () => {
+    setError(null);
+  };
   return (
     <main>
-      <UsersList items={USERS} />
+      <ErrorModal error={error} onClear={errorHandler} />
+      {loading && (
+        <div>
+          <LoadingSpinner />
+        </div>
+      )}
+      <UsersList items={users} />
     </main>
   );
 };
