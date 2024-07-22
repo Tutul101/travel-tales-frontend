@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./loading-spinner.css";
+
 const LoadingSpinner = (props) => {
   return (
     <div className={`${props.asOverlay && "loading-spinner__overlay"}`}>

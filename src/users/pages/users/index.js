@@ -10,6 +10,7 @@ const Users = () => {
   const [error, setError] = useState(null);
   useEffect(() => {
     const getUsers = async () => {
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:5000/api/users/");
         const responseData = await response.data.users;
@@ -17,6 +18,8 @@ const Users = () => {
         setUsers(responseData);
       } catch (err) {
         setError(err.message || "Something went wrong please try again");
+      } finally {
+        setLoading(false);
       }
     };
     getUsers();
@@ -28,12 +31,13 @@ const Users = () => {
   return (
     <main>
       <ErrorModal error={error} onClear={errorHandler} />
-      {loading && (
+      {loading ? (
         <div>
-          <LoadingSpinner />
+          <LoadingSpinner asOverlay={true} />
         </div>
+      ) : (
+        <UsersList items={users} />
       )}
-      <UsersList items={users} />
     </main>
   );
 };

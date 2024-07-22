@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
 
 import Card from "../../../shared/components/ui-elements/card";
 import Input from "../../../shared/components/ui-elements/form-elements/input";
@@ -15,6 +14,7 @@ import {
 } from "../../../shared/utils/validators";
 import Button from "../../../shared/components/ui-elements/form-elements/button";
 import ErrorModal from "../../../shared/components/ui-elements/error-modal";
+import { useHttpClient } from "../../../shared/custom-hooks/http-hook";
 
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -25,10 +25,10 @@ const Auth = () => {
   const [emailData, setEmalData] = useState("");
   const [passwordData, setPasswordData] = useState("");
   const [nameData, setNameData] = useState("");
-  const [isLoading, setIsloading] = useState(false);
-  const [error, setError] = useState(null);
+
   const { login } = useContext(AuthContext);
 
+  const { loading, error, sendRequest, clearError } = useHttpClient();
   useEffect(() => {
     if (isLoginMode) {
       if (isEmailValid && isPasswordValid) {
@@ -43,57 +43,34 @@ const Auth = () => {
         setIsFormValid(false);
       }
     }
-  }, [isEmailValid, isPasswordValid, isLoginMode]);
+  }, [isNameValid, isEmailValid, isPasswordValid, isLoginMode]);
 
   const authSubmitHandler = async (e) => {
     e.preventDefault();
     console.log("Email Data", emailData);
     console.log("Password Data", passwordData);
-    setIsloading(true);
     if (isLoginMode) {
       try {
-        const response = await axios.post(
-          "http://localhost:5000/api/users/login",
-          {
-            email: emailData,
-            password: passwordData,
-          },
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const response = await sendRequest("login", {
+          email: emailData,
+          password: passwordData,
+        });
         console.log("login response", response);
-        const responseData = await response.data;
-        setIsloading(false);
         login();
       } catch (err) {
         console.log("Error while login", err);
-        setError(err.message || "Someting went wrong please try again");
       }
     } else {
       try {
-        const response = await axios.post(
-          "http://localhost:5000/api/users/signup",
-          {
-            userName: nameData,
-            email: emailData,
-            password: passwordData,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await sendRequest("signup", {
+          userName: nameData,
+          email: emailData,
+          password: passwordData,
+        });
         console.log("response", response);
-        const responseData = await response.data;
-        console.log("responseData", responseData);
-        setIsloading(false);
         login();
       } catch (err) {
         console.log("error", err);
-        setError(err.message || "Someting went wrong here please try again");
-        setIsloading(false);
       }
     }
   };
@@ -102,14 +79,11 @@ const Auth = () => {
     setIsLoginMode((prev) => !prev);
   };
 
-  const handleError = () => {
-    setError(null);
-  };
   return (
     <main>
-      {error && <ErrorModal error={error} onClear={handleError} />}
+      {error && <ErrorModal error={error} onClear={clearError} />}
       <Card className="authentication">
-        {isLoading && <LoadingSpinner asOverLay={true} />}
+        {loading && <LoadingSpinner asOverLay={true} />}
         <h2>Login Required</h2>
         <hr />
         <form onSubmit={authSubmitHandler}>
