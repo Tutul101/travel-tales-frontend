@@ -56,7 +56,8 @@ const Auth = () => {
           password: passwordData,
         });
         console.log("login response", response);
-        login();
+        const userId = response.user["_id"];
+        login(userId);
       } catch (err) {
         console.log("Error while login", err);
       }
@@ -68,7 +69,8 @@ const Auth = () => {
           password: passwordData,
         });
         console.log("response", response);
-        login();
+        const userId = response.user["_id"];
+        login(userId);
       } catch (err) {
         console.log("error", err);
       }
