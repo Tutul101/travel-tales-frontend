@@ -30,9 +30,9 @@ export const userSignUp = async (body) => {
   }
 };
 
-export const getAllUser = async (url) => {
+export const getAllUser = async () => {
   try {
-    const response = await axios.get(url);
+    const response = await axios.get("http://localhost:5000/api/users/");
     return response.data;
   } catch (err) {
     throw new Error(err);

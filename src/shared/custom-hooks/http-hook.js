@@ -11,14 +11,18 @@ export const useHttpClient = () => {
       let response;
       switch (action) {
         case "login":
-          response = await userLogin(body);
+          return (response = await userLogin(body));
           break;
         case "signup":
           response = await userSignUp(body);
           break;
+        case "getuser":
+          response = await getAllUser();
+          break;
         default:
           response = await getAllUser();
       }
+      setLoading(false);
       return response;
     } catch (err) {
       setError(err.message || "Something went wrong please try again");

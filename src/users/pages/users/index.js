@@ -1,36 +1,30 @@
 import React, { useEffect, useState } from "react";
 
 import UsersList from "../../components/users-list";
-import axios from "axios";
 import LoadingSpinner from "../../../shared/components/ui-elements/loading-spinner";
 import ErrorModal from "../../../shared/components/ui-elements/error-modal";
+import { useHttpClient } from "../../../shared/custom-hooks/http-hook";
+
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+
+  const { loading, error, sendRequest, clearError } = useHttpClient();
+
   useEffect(() => {
     const getUsers = async () => {
-      setLoading(true);
       try {
-        const response = await axios.get("http://localhost:5000/api/users/");
-        const responseData = await response.data.users;
-        console.log("responseData", responseData);
-        setUsers(responseData);
+        const response = await sendRequest("getuser");
+        setUsers(response.users);
       } catch (err) {
-        setError(err.message || "Something went wrong please try again");
-      } finally {
-        setLoading(false);
+        console.log("error while fetching users", err);
       }
     };
     getUsers();
-  }, []);
+  }, [sendRequest]);
 
-  const errorHandler = () => {
-    setError(null);
-  };
   return (
     <main>
-      <ErrorModal error={error} onClear={errorHandler} />
+      <ErrorModal error={error} onClear={clearError} />
       {loading ? (
         <div>
           <LoadingSpinner asOverlay={true} />
