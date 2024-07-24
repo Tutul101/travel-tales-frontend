@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { AuthContext } from "../../../contexts/auth-context";
 import Input from "../../../shared/components/ui-elements/form-elements/input";
 import {
   VALIDATOR_MINLENGTH,
@@ -7,8 +10,12 @@ import {
 
 import Button from "../../../shared/components/ui-elements/form-elements/button";
 import "./new-place.css";
+import { useHttpClient } from "../../../shared/custom-hooks/http-hook";
+import LoadingSpinner from "../../../shared/components/ui-elements/loading-spinner";
+import ErrorModal from "../../../shared/components/ui-elements/error-modal";
 
 const NewPlace = () => {
+  const { userId } = useContext(AuthContext);
   const [isTitleValid, setIstitleValid] = useState(false);
   const [isDescriptionValid, setIsDescriptionValid] = useState(false);
   const [isAddressValid, setAddressValid] = useState(false);
@@ -16,6 +23,10 @@ const NewPlace = () => {
   const [titleData, setTitleData] = useState("");
   const [descriptionData, setDescriptionData] = useState("");
   const [addressData, setAddressData] = useState("");
+
+  const { loading, error, sendRequest, clearError } = useHttpClient();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isTitleValid && isDescriptionValid && isAddressValid) {
@@ -30,9 +41,25 @@ const NewPlace = () => {
     console.log("Title data", titleData);
     console.log("description data", descriptionData);
     console.log("Address Data", addressData);
+
+    sendRequest("addplace", {
+      title: titleData,
+      description: descriptionData,
+      address: addressData,
+      creator: userId,
+    })
+      .then((res) => {
+        console.log("add place response", res);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log("Error while submiting new place", err);
+      });
   };
   return (
     <main>
+      {error && <ErrorModal error={error} onClear={clearError} />}
+      {loading && <LoadingSpinner asOverlay={true} />}
       <form className="place-form" onSubmit={placeSubmitHandler}>
         <Input
           validators={[VALIDATOR_REQUIRE()]}

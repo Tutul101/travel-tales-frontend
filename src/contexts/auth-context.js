@@ -12,7 +12,7 @@ export const AuthContextProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const login = (uID) => {
     setIsLoggedIn(true);
-    setUserId(userId);
+    setUserId(uID);
   };
   const logout = () => {
     setIsLoggedIn(false);

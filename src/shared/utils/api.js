@@ -38,3 +38,16 @@ export const getAllUser = async () => {
     throw new Error(err);
   }
 };
+
+export const addPlace = async (body) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/places",
+      body,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};

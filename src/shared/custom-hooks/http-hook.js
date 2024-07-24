@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getAllUser, userLogin, userSignUp } from "../utils/api";
+import { getAllUser, userLogin, userSignUp, addPlace } from "../utils/api";
 
 export const useHttpClient = () => {
   const [loading, setLoading] = useState(false);
@@ -19,6 +19,8 @@ export const useHttpClient = () => {
         case "getuser":
           response = await getAllUser();
           break;
+        case "addplace":
+          response = await addPlace(body);
         default:
           response = await getAllUser();
       }
