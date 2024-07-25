@@ -1,11 +1,17 @@
 import { useState, useCallback } from "react";
-import { getAllUser, userLogin, userSignUp, addPlace } from "../utils/api";
+import {
+  getAllUser,
+  userLogin,
+  userSignUp,
+  addPlace,
+  getPlaceByUserId,
+} from "../utils/api";
 
 export const useHttpClient = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const sendRequest = useCallback(async (action, body = null) => {
+  const sendRequest = useCallback(async (action, body = null, id = null) => {
     setLoading(true);
     try {
       let response;
@@ -21,6 +27,10 @@ export const useHttpClient = () => {
           break;
         case "addplace":
           response = await addPlace(body);
+          break;
+        case "gateplacebyuserid":
+          response = await getPlaceByUserId(id);
+          break;
         default:
           response = await getAllUser();
       }

@@ -16,13 +16,14 @@ const PlaceList = ({ items }) => {
       </div>
     );
   }
+  console.log("place items Items", items);
   return (
     <ul className="place-list">
       {items.map((item) => (
         <PlaceItem
-          key={item.id}
-          id={item.id}
-          image={item.imageUrl}
+          key={item["_id"]}
+          id={item["_id"]}
+          image={item.image}
           title={item.title}
           address={item.address}
           creatorId={item.creator}

@@ -51,3 +51,14 @@ export const addPlace = async (body) => {
     throw new Error(err);
   }
 };
+
+export const getPlaceByUserId = async (userId) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/places/user/${userId}`
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
