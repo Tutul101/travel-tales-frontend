@@ -5,6 +5,9 @@ import {
   userSignUp,
   addPlace,
   getPlaceByUserId,
+  getPlaceByPlaceId,
+  updatePlaceById,
+  deletePlace,
 } from "../utils/api";
 
 export const useHttpClient = () => {
@@ -17,7 +20,7 @@ export const useHttpClient = () => {
       let response;
       switch (action) {
         case "login":
-          return (response = await userLogin(body));
+          response = await userLogin(body);
           break;
         case "signup":
           response = await userSignUp(body);
@@ -28,8 +31,17 @@ export const useHttpClient = () => {
         case "addplace":
           response = await addPlace(body);
           break;
-        case "gateplacebyuserid":
+        case "getplacebyuserid":
           response = await getPlaceByUserId(id);
+          break;
+        case "getplacebyplaceid":
+          response = await getPlaceByPlaceId(id);
+          break;
+        case "updateplace":
+          response = await updatePlaceById(body, id);
+          break;
+        case "deleteplace":
+          response = await deletePlace(id);
           break;
         default:
           response = await getAllUser();

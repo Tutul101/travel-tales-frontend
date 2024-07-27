@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Input from "../../../shared/components/ui-elements/form-elements/input";
 import {
   VALIDATOR_MINLENGTH,
@@ -8,6 +8,9 @@ import {
 import Button from "../../../shared/components/ui-elements/form-elements/button";
 
 import "./update-place.css";
+import { useHttpClient } from "../../../shared/custom-hooks/http-hook";
+import ErrorModal from "../../../shared/components/ui-elements/error-modal";
+import LoadingSpinner from "../../../shared/components/ui-elements/loading-spinner";
 
 const DUMMY_PLACES = [
   {
@@ -39,10 +42,7 @@ const DUMMY_PLACES = [
 ];
 
 const UpdatePlace = () => {
-  const placeId = useParams().placeId;
-
-  const identifiedPlace = DUMMY_PLACES.find((place) => place.id === placeId);
-
+  const [loadedPlace, setLoadedPlace] = useState([]);
   const [isTitleValid, setIstitleValid] = useState(false);
   const [isDescriptionValid, setIsDescriptionValid] = useState(false);
   const [isAddressValid, setAddressValid] = useState(false);
@@ -50,6 +50,21 @@ const UpdatePlace = () => {
   const [titleData, setTitleData] = useState("");
   const [descriptionData, setDescriptionData] = useState("");
   const [addressData, setAddressData] = useState("");
+
+  const { loading, error, sendRequest, clearError } = useHttpClient();
+  const placeId = useParams().placeId;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    sendRequest("getplacebyplaceid", null, placeId)
+      .then((res) => {
+        console.log("Place data by id", res);
+        setLoadedPlace(res.place);
+      })
+      .catch((err) => {
+        console.log("Error while loading data from place id", err);
+      });
+  }, []);
 
   useEffect(() => {
     if (isTitleValid && isDescriptionValid && isAddressValid) {
@@ -59,7 +74,7 @@ const UpdatePlace = () => {
     }
   }, [isTitleValid, isDescriptionValid, isAddressValid]);
 
-  if (!identifiedPlace) {
+  if (!loadedPlace) {
     return (
       <div className="center">
         <h2>Could not find place</h2>
@@ -72,48 +87,69 @@ const UpdatePlace = () => {
     console.log("Title data", titleData);
     console.log("description data", descriptionData);
     console.log("Address Data", addressData);
+    sendRequest(
+      "updateplace",
+      {
+        title: titleData,
+        description: descriptionData,
+      },
+      placeId
+    )
+      .then((res) => {
+        console.log("Updata response", res);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log("error while updating", err);
+      });
   };
-
+  console.log("loadedPlace", loadedPlace.title);
   return (
     <main>
-      <form className="place-form" onSubmit={placeUpdateHandler}>
-        <Input
-          id="title"
-          type="text"
-          element="input"
-          label="Title"
-          value={identifiedPlace.title}
-          validators={[VALIDATOR_REQUIRE()]}
-          onInput={setIstitleValid}
-          setData={setTitleData}
-          errorText="Please enter a valid title"
-        />
-        <Input
-          id="description"
-          type="textarea"
-          element="textarea"
-          label="Description"
-          value={identifiedPlace.description}
-          validators={[VALIDATOR_MINLENGTH(5)]}
-          onInput={setIsDescriptionValid}
-          setData={setDescriptionData}
-          errorText="Please enter a valid description (min 5 character)"
-        />
-        <Input
-          id="address"
-          type="text"
-          element="input"
-          label="Address"
-          value={identifiedPlace.address}
-          validators={[VALIDATOR_REQUIRE()]}
-          onInput={setAddressValid}
-          setData={setAddressData}
-          errorText="Please enter a valid address"
-        />
-        <Button type="submit" disabled={!isFormValid}>
-          Update Place
-        </Button>
-      </form>
+      {error && <ErrorModal error={error} onClear={clearError} />}
+
+      {loading && <LoadingSpinner asOverlay={true} />}
+
+      {loadedPlace.length !== 0 && (
+        <form className="place-form" onSubmit={placeUpdateHandler}>
+          <Input
+            id="title"
+            type="text"
+            element="input"
+            label="Title"
+            value={loadedPlace.title}
+            validators={[VALIDATOR_REQUIRE()]}
+            onInput={setIstitleValid}
+            setData={setTitleData}
+            errorText="Please enter a valid title"
+          />
+          <Input
+            id="description"
+            type="textarea"
+            element="textarea"
+            label="Description"
+            value={loadedPlace.description}
+            validators={[VALIDATOR_MINLENGTH(5)]}
+            onInput={setIsDescriptionValid}
+            setData={setDescriptionData}
+            errorText="Please enter a valid description (min 5 character)"
+          />
+          <Input
+            id="address"
+            type="text"
+            element="input"
+            label="Address"
+            value={loadedPlace.address}
+            validators={[VALIDATOR_REQUIRE()]}
+            onInput={setAddressValid}
+            setData={setAddressData}
+            errorText="Please enter a valid address"
+          />
+          <Button type="submit" disabled={!isFormValid}>
+            Update Place
+          </Button>
+        </form>
+      )}
     </main>
   );
 };

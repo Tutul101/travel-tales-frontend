@@ -62,3 +62,39 @@ export const getPlaceByUserId = async (userId) => {
     throw new Error(err);
   }
 };
+
+export const getPlaceByPlaceId = async (placeId) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/places/${placeId}`
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const updatePlaceById = async (body, placeId) => {
+  try {
+    const response = await axios.patch(
+      `http://localhost:5000/api/places/${placeId}`,
+      body,
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const deletePlace = async (placeId) => {
+  try {
+    const response = axios.delete(
+      `http://localhost:5000/api/places/${placeId}`
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};

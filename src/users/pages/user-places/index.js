@@ -9,7 +9,7 @@ const UserPlaces = () => {
   const [loadedPlace, setLoadedPlace] = useState([]);
   const { loading, error, sendRequest, clearError } = useHttpClient();
   useEffect(() => {
-    sendRequest("gateplacebyuserid", null, userId)
+    sendRequest("getplacebyuserid", null, userId)
       .then((res) => {
         console.log("loadedPlace", res);
         setLoadedPlace(res.places);
@@ -19,13 +19,19 @@ const UserPlaces = () => {
       });
   }, [sendRequest, userId]);
 
+  const placeDeleteHandler = (deletedPlaceId) => {
+    setLoadedPlace((prev) => {
+      return prev.filter((item) => item["_id"] !== deletedPlaceId);
+    });
+  };
+
   return (
     <main>
       {error && <ErrorModal onClear={clearError} />}
       {loading ? (
         <LoadingSpinner asOverlay={true} />
       ) : (
-        <PlaceList items={loadedPlace} />
+        <PlaceList items={loadedPlace} onDeletePlaces={placeDeleteHandler} />
       )}
     </main>
   );
