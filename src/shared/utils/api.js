@@ -19,10 +19,7 @@ export const userSignUp = async (body) => {
   try {
     const response = await axios.post(
       "http://localhost:5000/api/users/signup",
-      body,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
+      body
     );
     return response.data;
   } catch (err) {

@@ -65,12 +65,16 @@ const Auth = () => {
       }
     } else {
       try {
-        console.log("file data", fileData);
-        const response = await sendRequest("signup", {
-          userName: nameData,
-          email: emailData,
-          password: passwordData,
+        const formData = new FormData();
+        formData.append("userName", nameData);
+        formData.append("email", emailData);
+        formData.append("password", passwordData);
+        formData.append("image", fileData);
+
+        formData.forEach((value, key) => {
+          console.log(`${key}: ${value}`);
         });
+        const response = await sendRequest("signup", formData);
         console.log("response", response);
         const userId = response.user["_id"];
         login(userId);
