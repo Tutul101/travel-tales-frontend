@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Card from "../../../shared/components/ui-elements/card";
 import Input from "../../../shared/components/ui-elements/form-elements/input";
 import LoadingSpinner from "../../../shared/components/ui-elements/loading-spinner";
+import ImageUpload from "../../../shared/components/ui-elements/form-elements/image-upload";
 
 import { AuthContext } from "../../../contexts/auth-context";
 
@@ -21,11 +22,12 @@ const Auth = () => {
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isNameValid, setIsNameValid] = useState(false);
+  const [isFileValid, setIsFileValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [emailData, setEmalData] = useState("");
   const [passwordData, setPasswordData] = useState("");
   const [nameData, setNameData] = useState("");
-
+  const [fileData, setFileData] = useState(null);
   const { login } = useContext(AuthContext);
 
   const { loading, error, sendRequest, clearError } = useHttpClient();
@@ -37,13 +39,13 @@ const Auth = () => {
         setIsFormValid(false);
       }
     } else {
-      if (isNameValid && isEmailValid && isPasswordValid) {
+      if (isNameValid && isEmailValid && isPasswordValid && isFileValid) {
         setIsFormValid(true);
       } else {
         setIsFormValid(false);
       }
     }
-  }, [isNameValid, isEmailValid, isPasswordValid, isLoginMode]);
+  }, [isNameValid, isEmailValid, isPasswordValid, isFileValid, isLoginMode]);
 
   const authSubmitHandler = async (e) => {
     e.preventDefault();
@@ -63,6 +65,7 @@ const Auth = () => {
       }
     } else {
       try {
+        console.log("file data", fileData);
         const response = await sendRequest("signup", {
           userName: nameData,
           email: emailData,
@@ -99,6 +102,13 @@ const Auth = () => {
               setData={setNameData}
               validators={[VALIDATOR_REQUIRE()]}
               errorText="Please enter a valid name"
+            />
+          )}
+          {!isLoginMode && (
+            <ImageUpload
+              center
+              onInput={setIsFileValid}
+              setData={setFileData}
             />
           )}
           <Input
