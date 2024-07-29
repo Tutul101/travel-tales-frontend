@@ -38,11 +38,7 @@ export const getAllUser = async () => {
 
 export const addPlace = async (body) => {
   try {
-    const response = await axios.post(
-      "http://localhost:5000/api/places",
-      body,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const response = await axios.post("http://localhost:5000/api/places", body);
     return response.data;
   } catch (err) {
     throw new Error(err);

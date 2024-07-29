@@ -9,6 +9,7 @@ import {
 } from "../../../shared/utils/validators";
 
 import Button from "../../../shared/components/ui-elements/form-elements/button";
+import ImageUpload from "../../../shared/components/ui-elements/form-elements/image-upload";
 import "./new-place.css";
 import { useHttpClient } from "../../../shared/custom-hooks/http-hook";
 import LoadingSpinner from "../../../shared/components/ui-elements/loading-spinner";
@@ -23,6 +24,8 @@ const NewPlace = () => {
   const [titleData, setTitleData] = useState("");
   const [descriptionData, setDescriptionData] = useState("");
   const [addressData, setAddressData] = useState("");
+  const [isFileValid, setIsFileValid] = useState(false);
+  const [fileData, setFileData] = useState(null);
 
   const { loading, error, sendRequest, clearError } = useHttpClient();
 
@@ -34,20 +37,24 @@ const NewPlace = () => {
     } else {
       setIsFormValid(false);
     }
-  }, [isTitleValid, isDescriptionValid, isAddressValid]);
+  }, [isTitleValid, isDescriptionValid, isAddressValid, isFileValid]);
 
   const placeSubmitHandler = (event) => {
     event.preventDefault();
     console.log("Title data", titleData);
     console.log("description data", descriptionData);
     console.log("Address Data", addressData);
+    const formData = new FormData();
+    formData.append("title", titleData);
+    formData.append("description", descriptionData);
+    formData.append("address", addressData);
+    formData.append("creator", userId);
+    formData.append("image", fileData);
 
-    sendRequest("addplace", {
-      title: titleData,
-      description: descriptionData,
-      address: addressData,
-      creator: userId,
-    })
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    sendRequest("addplace", formData)
       .then((res) => {
         console.log("add place response", res);
         navigate("/");
@@ -82,7 +89,7 @@ const NewPlace = () => {
           id="description"
           errorText="Please enter a valid description (min 5 character)"
         />
-
+        <ImageUpload center onInput={setIsFileValid} setData={setFileData} />
         <Input
           validators={[VALIDATOR_REQUIRE()]}
           onInput={setAddressValid}

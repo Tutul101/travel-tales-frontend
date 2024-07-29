@@ -67,7 +67,7 @@ const PlaceItem = ({ image, title, address, description, id, onDelete }) => {
         {loading && <LoadingSpinner asOverlay={true} />}
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={image} alt={title} />
+            <img src={`http://localhost:5000/${image}`} alt={title} />
           </div>
           <div className="place-item__info">
             <h2>{title}</h2>
