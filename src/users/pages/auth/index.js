@@ -49,8 +49,6 @@ const Auth = () => {
 
   const authSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log("Email Data", emailData);
-    console.log("Password Data", passwordData);
     if (isLoginMode) {
       try {
         const response = await sendRequest("login", {
@@ -58,8 +56,9 @@ const Auth = () => {
           password: passwordData,
         });
         console.log("login response", response);
-        const userId = response.user["_id"];
-        login(userId);
+        const userId = response.user.userId;
+        const jwtToken = response.user.token;
+        login(userId, jwtToken);
       } catch (err) {
         console.log("Error while login", err);
       }
@@ -76,8 +75,9 @@ const Auth = () => {
         });
         const response = await sendRequest("signup", formData);
         console.log("response", response);
-        const userId = response.user["_id"];
-        login(userId);
+        const userId = response.user.userId;
+        const jwtToken = response.user.token;
+        login(userId, jwtToken);
       } catch (err) {
         console.log("error", err);
       }

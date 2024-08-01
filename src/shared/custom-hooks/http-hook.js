@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import {
   getAllUser,
   userLogin,
@@ -9,11 +9,12 @@ import {
   updatePlaceById,
   deletePlace,
 } from "../utils/api";
+import { AuthContext } from "../../contexts/auth-context";
 
 export const useHttpClient = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const { token } = useContext(AuthContext);
   const sendRequest = useCallback(async (action, body = null, id = null) => {
     setLoading(true);
     try {
@@ -29,7 +30,7 @@ export const useHttpClient = () => {
           response = await getAllUser();
           break;
         case "addplace":
-          response = await addPlace(body);
+          response = await addPlace(body, token);
           break;
         case "getplacebyuserid":
           response = await getPlaceByUserId(id);

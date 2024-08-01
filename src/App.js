@@ -12,8 +12,9 @@ import UpdatePlace from "./places/pages/update-place";
 import Auth from "./users/pages/auth";
 import { AuthContext } from "./contexts/auth-context";
 function App() {
-  const { isLoggedin } = useContext(AuthContext);
+  const { isLoggedin, token } = useContext(AuthContext);
 
+  console.log("JWT token", token);
   let routes;
 
   if (isLoggedin) {
