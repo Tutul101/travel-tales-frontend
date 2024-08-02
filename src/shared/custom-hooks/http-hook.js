@@ -39,10 +39,10 @@ export const useHttpClient = () => {
           response = await getPlaceByPlaceId(id);
           break;
         case "updateplace":
-          response = await updatePlaceById(body, id);
+          response = await updatePlaceById(body, id, token);
           break;
         case "deleteplace":
-          response = await deletePlace(id);
+          response = await deletePlace(id, token);
           break;
         default:
           response = await getAllUser();

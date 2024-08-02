@@ -75,12 +75,17 @@ export const getPlaceByPlaceId = async (placeId) => {
   }
 };
 
-export const updatePlaceById = async (body, placeId) => {
+export const updatePlaceById = async (body, placeId, token) => {
   try {
     const response = await axios.patch(
       `http://localhost:5000/api/places/${placeId}`,
       body,
-      { headers: { "Content-Type": "application/json" } }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }
     );
 
     return response.data;
@@ -89,10 +94,11 @@ export const updatePlaceById = async (body, placeId) => {
   }
 };
 
-export const deletePlace = async (placeId) => {
+export const deletePlace = async (placeId, token) => {
   try {
     const response = axios.delete(
-      `http://localhost:5000/api/places/${placeId}`
+      `http://localhost:5000/api/places/${placeId}`,
+      { headers: { Authorization: "Bearer " + token } }
     );
     return response.data;
   } catch (err) {
