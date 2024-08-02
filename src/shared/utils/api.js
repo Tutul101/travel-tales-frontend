@@ -3,7 +3,7 @@ import axios from "axios";
 export const userLogin = async (body) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/users/login",
+      `${process.env.REACT_APP_BACKEND_URL}users/login`,
       body,
       {
         headers: { "Content-Type": "application/json" },
@@ -18,7 +18,7 @@ export const userLogin = async (body) => {
 export const userSignUp = async (body) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/users/signup",
+      `${process.env.REACT_APP_BACKEND_URL}users/signup`,
       body
     );
     return response.data;
@@ -29,7 +29,9 @@ export const userSignUp = async (body) => {
 
 export const getAllUser = async () => {
   try {
-    const response = await axios.get("http://localhost:5000/api/users/");
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}users/`
+    );
     return response.data;
   } catch (err) {
     throw new Error(err);
@@ -39,7 +41,7 @@ export const getAllUser = async () => {
 export const addPlace = async (body, token) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/places",
+      `${process.env.REACT_APP_BACKEND_URL}places`,
       body,
       {
         headers: {
@@ -56,7 +58,7 @@ export const addPlace = async (body, token) => {
 export const getPlaceByUserId = async (userId) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/places/user/${userId}`
+      `${process.env.REACT_APP_BACKEND_URL}places/user/${userId}`
     );
     return response.data;
   } catch (err) {
@@ -67,7 +69,7 @@ export const getPlaceByUserId = async (userId) => {
 export const getPlaceByPlaceId = async (placeId) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/places/${placeId}`
+      `${process.env.REACT_APP_BACKEND_URL}places/${placeId}`
     );
     return response.data;
   } catch (err) {
@@ -78,7 +80,7 @@ export const getPlaceByPlaceId = async (placeId) => {
 export const updatePlaceById = async (body, placeId, token) => {
   try {
     const response = await axios.patch(
-      `http://localhost:5000/api/places/${placeId}`,
+      `${process.env.REACT_APP_BACKEND_URL}places/${placeId}`,
       body,
       {
         headers: {
@@ -97,7 +99,7 @@ export const updatePlaceById = async (body, placeId, token) => {
 export const deletePlace = async (placeId, token) => {
   try {
     const response = axios.delete(
-      `http://localhost:5000/api/places/${placeId}`,
+      `${process.env.REACT_APP_BACKEND_URL}places/${placeId}`,
       { headers: { Authorization: "Bearer " + token } }
     );
     return response.data;
