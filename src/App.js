@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, Suspense } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -6,12 +6,16 @@ import {
 } from "react-router-dom";
 import Root from "./Root";
 import Users from "./users/pages/users";
-import UserPlaces from "./users/pages/user-places";
-import NewPlace from "./places/pages/new-place";
-import UpdatePlace from "./places/pages/update-place";
-import Auth from "./users/pages/auth";
+// import UserPlaces from "./users/pages/user-places";
+// import NewPlace from "./places/pages/new-place";
+// import UpdatePlace from "./places/pages/update-place";
+// import Auth from "./users/pages/auth";
 import { AuthContext } from "./contexts/auth-context";
 
+const UserPlaces = React.lazy(() => import("./users/pages/user-places"));
+const NewPlace = React.lazy(() => import("./places/pages/new-place"));
+const UpdatePlace = React.lazy(() => import("./places/pages/update-place"));
+const Auth = React.lazy(() => import("./users/pages/auth"));
 let logoutTimer;
 function App() {
   const { isLoggedin, token, login, logout } = useContext(AuthContext);
@@ -48,15 +52,27 @@ function App() {
       },
       {
         path: "/:userId/places",
-        element: <UserPlaces />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <UserPlaces />
+          </Suspense>
+        ),
       },
       {
         path: "/places/new",
-        element: <NewPlace />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <NewPlace />
+          </Suspense>
+        ),
       },
       {
         path: "/places/:placeId",
-        element: <UpdatePlace />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <UpdatePlace />
+          </Suspense>
+        ),
       },
       {
         path: "*",
@@ -71,11 +87,19 @@ function App() {
       },
       {
         path: "/:userId/places",
-        element: <UserPlaces />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <UserPlaces />
+          </Suspense>
+        ),
       },
       {
         path: "/auth",
-        element: <Auth />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Auth />
+          </Suspense>
+        ),
       },
       {
         path: "*",
